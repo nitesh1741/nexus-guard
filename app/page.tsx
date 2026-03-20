@@ -1,13 +1,21 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Header } from '@/components/dashboard/Header';
 import { UniversalInput } from '@/components/dashboard/UniversalInput';
 import { AIThinking } from '@/components/dashboard/AIThinking';
-import { ActionScreen } from '@/components/dashboard/ActionScreen';
 import { PersonalDashboard } from '@/components/dashboard/PersonalDashboard';
 import { useTriage } from '@/hooks/useTriage';
+
+// Dynamically import ActionScreen — only needed after analysis completes.
+// This reduces the initial JS bundle size.
+const ActionScreen = dynamic(
+  () => import('@/components/dashboard/ActionScreen').then(m => ({ default: m.ActionScreen })),
+  { ssr: false }
+);
+
 
 export default function EmergencyDashboard() {
   const { image, setImage, notes, setNotes, phase, report, error, generateReport, reset } = useTriage();

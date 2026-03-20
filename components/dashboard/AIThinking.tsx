@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 import { BrainCircuit, Search, MapPin, AlertCircle } from 'lucide-react';
 
-export function AIThinking() {
+export const AIThinking = memo(function AIThinking() {
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
@@ -75,4 +75,4 @@ export function AIThinking() {
       </div>
     </motion.div>
   );
-}
+});

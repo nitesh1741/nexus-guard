@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { TriageReport } from '@/types/triage';
+import { saveTriageToHistory } from '@/lib/firestoreHistory';
 
 export type ProcessingPhase = 'idle' | 'analyzing' | 'complete';
 
@@ -11,7 +12,7 @@ export function useTriage() {
   const [report, setReport] = useState<TriageReport | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const generateReport = async () => {
+  const generateReport = useCallback(async () => {
     if (!image && !notes.trim()) {
       setError("Please provide at least an image or some text context.");
       return;
@@ -36,9 +37,14 @@ export function useTriage() {
         throw new Error(errorData.error || 'Failed to generate report');
       }
 
-      const data = await response.json();
+      const data: TriageReport = await response.json();
       setReport(data);
       setPhase('complete');
+
+      // Persist to Firestore history (fire-and-forget — non-blocking)
+      saveTriageToHistory(data).catch((err) => {
+        console.warn('Firestore history save failed (non-critical):', err);
+      });
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'An unexpected error occurred.';
       setError(message);
@@ -46,15 +52,16 @@ export function useTriage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [image, notes]);
 
-  const reset = () => {
+  const reset = useCallback(() => {
     setImage(null);
     setNotes('');
     setReport(null);
     setError(null);
     setPhase('idle');
-  };
+  }, []);
 
   return { image, setImage, notes, setNotes, loading, phase, report, error, generateReport, reset };
 }
+

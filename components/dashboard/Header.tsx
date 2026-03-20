@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Hospital } from 'lucide-react';
 
-export function Header() {
+export const Header = memo(function Header() {
   return (
     <header className="w-full flex items-center justify-between p-6 absolute top-0 left-0 right-0 z-50">
       <div className="flex items-center gap-3">
@@ -27,4 +27,4 @@ export function Header() {
       </div>
     </header>
   );
-}
+});
