@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: 'standalone', // Added to build a lean version for Cloud Run
 };
 
 export default nextConfig;
