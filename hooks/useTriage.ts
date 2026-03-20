@@ -1,19 +1,14 @@
-"use client";
-
-import React, { useState } from 'react';
-import { Header } from '@/components/dashboard/Header';
-import { IncidentForm } from '@/components/dashboard/IncidentForm';
-import { DashboardOutput } from '@/components/dashboard/DashboardOutput';
+import { useState } from 'react';
 import { TriageReport } from '@/types/triage';
 
-export default function EmergencyDashboard() {
+export function useTriage() {
   const [image, setImage] = useState<string | null>(null);
   const [notes, setNotes] = useState('');
   const [loading, setLoading] = useState(false);
   const [report, setReport] = useState<TriageReport | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const handleGenerateReport = async () => {
+  const generateReport = async () => {
     if (!image) {
       setError("Please upload an accident photo.");
       return;
@@ -37,7 +32,7 @@ export default function EmergencyDashboard() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.json().catch(() => ({ error: 'Failed to parse error response' }));
         throw new Error(errorData.error || 'Failed to generate report');
       }
 
@@ -51,24 +46,5 @@ export default function EmergencyDashboard() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-100 font-sans p-6 selection:bg-red-500/30">
-      <Header />
-      <main className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <IncidentForm 
-          image={image}
-          setImage={setImage}
-          notes={notes}
-          setNotes={setNotes}
-          loading={loading}
-          error={error}
-          onGenerateReport={handleGenerateReport}
-        />
-        <DashboardOutput 
-          report={report}
-          loading={loading}
-        />
-      </main>
-    </div>
-  );
+  return { image, setImage, notes, setNotes, loading, report, error, generateReport };
 }
