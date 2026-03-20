@@ -23,6 +23,10 @@ export function UniversalInput({
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > 4 * 1024 * 1024) {
+        alert("Image is too large. Please select an image under 4MB for optimal processing.");
+        return;
+      }
       const reader = new FileReader();
       reader.onloadend = () => {
         setImage(reader.result as string);
@@ -78,18 +82,21 @@ export function UniversalInput({
               onClick={() => fileInputRef.current?.click()}
               className="p-3 rounded-full bg-neutral-800 hover:bg-neutral-700 text-neutral-400 hover:text-white transition-colors flex items-center justify-center shrink-0"
               title="Upload Image"
+              aria-label="Upload visual evidence"
             >
               <ImageIcon className="w-5 h-5" />
             </button>
             <button 
               className="p-3 rounded-full bg-neutral-800 hover:bg-neutral-700 text-neutral-400 hover:text-white transition-colors flex items-center justify-center shrink-0"
               title="Voice Input (Mock)"
+              aria-label="Start voice recording"
             >
               <Mic className="w-5 h-5" />
             </button>
             <button 
               className="p-3 rounded-full bg-neutral-800 hover:bg-neutral-700 text-neutral-400 hover:text-white transition-colors hidden sm:flex items-center justify-center shrink-0"
               title="Upload Document (Mock)"
+              aria-label="Upload document"
             >
               <Upload className="w-5 h-5" />
             </button>

@@ -27,6 +27,8 @@ export function ActionScreen({ report, onReset }: ActionScreenProps) {
       initial={{ opacity: 0, scale: 0.98 }}
       animate={{ opacity: 1, scale: 1 }}
       className="w-full max-w-4xl mx-auto mt-4 sm:mt-8 pb-12"
+      aria-live={isEmergency ? "assertive" : "polite"}
+      role="alert"
     >
       <button 
         onClick={onReset}
@@ -119,7 +121,7 @@ export function ActionScreen({ report, onReset }: ActionScreenProps) {
                     key={idx}
                     className={`w-full text-left p-5 rounded-2xl border transition-all flex items-center gap-4 group ${
                       idx === 0 
-                        ? `bg-${themeColor}-500 text-white hover:bg-${themeColor}-600 border-${themeColor}-500 shadow-lg ${theme.glow}`
+                        ? `${theme.bg} text-white hover:brightness-110 ${theme.border} shadow-lg ${theme.glow}`
                         : 'bg-neutral-900 border-neutral-700 hover:border-neutral-500 hover:bg-neutral-800 text-white'
                     }`}
                   >
