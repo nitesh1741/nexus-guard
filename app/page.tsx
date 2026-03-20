@@ -1,55 +1,13 @@
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Header } from '@/components/dashboard/Header';
 import { IncidentForm } from '@/components/dashboard/IncidentForm';
 import { DashboardOutput } from '@/components/dashboard/DashboardOutput';
-import { TriageReport } from '@/types/triage';
+import { useTriage } from '@/hooks/useTriage';
 
 export default function EmergencyDashboard() {
-  const [image, setImage] = useState<string | null>(null);
-  const [notes, setNotes] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [report, setReport] = useState<TriageReport | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleGenerateReport = async () => {
-    if (!image) {
-      setError("Please upload an accident photo.");
-      return;
-    }
-    if (!notes.trim()) {
-      setError("Please provide emergency notes or context.");
-      return;
-    }
-
-    setError(null);
-    setLoading(true);
-    setReport(null);
-
-    try {
-      const response = await fetch('/api/triage', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ image, text: notes }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to generate report');
-      }
-
-      const data = await response.json();
-      setReport(data);
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'An unexpected error occurred.';
-      setError(message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { image, setImage, notes, setNotes, loading, report, error, generateReport } = useTriage();
 
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-100 font-sans p-6 selection:bg-red-500/30">
@@ -62,7 +20,7 @@ export default function EmergencyDashboard() {
           setNotes={setNotes}
           loading={loading}
           error={error}
-          onGenerateReport={handleGenerateReport}
+          onGenerateReport={generateReport}
         />
         <DashboardOutput 
           report={report}

@@ -50,13 +50,15 @@ export function IncidentForm({
 
         <div className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-neutral-400 mb-2">Visual Evidence (Photo)</label>
+            <label htmlFor="incident-image" className="block text-sm font-medium text-neutral-400 mb-2">Visual Evidence (Photo)</label>
             <div 
               className={`relative group border-2 border-dashed rounded-xl p-8 text-center transition-all ${
                 image ? 'border-blue-500/50 bg-blue-500/5' : 'border-neutral-700 hover:border-neutral-500 bg-neutral-900/50'
               }`}
             >
               <input
+                id="incident-image"
+                aria-describedby="image-upload-help"
                 type="file"
                 accept="image/*"
                 onChange={handleImageUpload}
@@ -66,24 +68,25 @@ export function IncidentForm({
               {image ? (
                 <div className="flex flex-col items-center">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={image} alt="Preview" className="h-40 object-cover rounded-lg shadow-md mb-3 border border-neutral-700" />
+                  <img src={image} alt="Uploaded Incident Image" className="h-40 object-cover rounded-lg shadow-md mb-3 border border-neutral-700" />
                   <p className="text-sm text-blue-400 font-medium group-hover:text-blue-300">Image attached. Click or drag to replace.</p>
                 </div>
               ) : (
                 <div className="flex flex-col items-center text-neutral-500 group-hover:text-neutral-300 transition-colors">
                   <Upload className="w-10 h-10 mb-3" />
                   <p className="text-base font-medium text-white mb-1">Upload Accident Photo</p>
-                  <p className="text-sm">Click or drag & drop (JPG, PNG)</p>
+                  <p id="image-upload-help" className="text-sm">Click or drag & drop (JPG, PNG)</p>
                 </div>
               )}
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-neutral-400 mb-2 flex items-center gap-2">
+            <label htmlFor="incident-notes" className="block text-sm font-medium text-neutral-400 mb-2 flex items-center gap-2">
               <FileText className="w-4 h-4" /> Messy Notes / Context Text
             </label>
             <textarea
+              id="incident-notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="e.g., Patient found semi-conscious at construction site. Heavy bleeding from right leg. Breathing is rapid. Needs immediate attention."
